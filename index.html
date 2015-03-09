@@ -16,36 +16,30 @@
     </div>
     <div id="table"></div>
     <script>
-      MP.api.ready(function() {
-        var eventSelect = $('#eventSelect').MPEventSelect();
-        var propSelect  = $('#propSelect').MPPropertySelect();
-        var dateSelect  = $('#dateSelect').MPDatepicker();
-        var eventGraph  = $('#graph').MPChart({chartType: 'line'});
-        var eventTable  = $('#table').MPTable({
-          showPercentages: true,
-          firstColHeader: 'Event'
-        });
-
-        var runQuery = function() {
-          var eventName = eventSelect.MPEventSelect('value'),
-              propName  = propSelect.MPPropertySelect('value'),
-              dateRange = dateSelect.MPDatepicker('value');
-
-          if (eventName) {
-            MP.api.segment(eventName, propName, dateRange).done(function(results) {
-              eventGraph.MPChart('setData', results);
-              eventTable.MPTable('setData', results);
-            });
-          }
-        };
-        eventSelect.on('change', function(e, eventName) {
-          propSelect.MPPropertySelect('setEvent', eventName);
-          $("#by").show();
-          runQuery();
-        });
-        propSelect.on('change', runQuery);
-        dateSelect.on('change', runQuery);
+     MP.api.ready(function() {
+      // assumes you have an event called 'Game Played'
+      var eventName = 'Game Played';
+      var $mau = MP.api.segment(eventName, 'mp_country_code', {
+          from: moment().subtract(1, 'months'),
+          to: moment(),
+          type: 'unique',
+          unit: 'month'
       });
+  
+      var $dau = MP.api.segment(eventName, 'mp_country_code', {
+          from: moment().subtract(1, 'days'),
+          to: moment(),
+          type: 'unique',
+          unit: 'day'
+      });
+
+      $.when($dau, $mau).done(function(dau, mau) {
+          $('<div></div>').appendTo('body').MPChart({
+              chartType: 'map',
+              data: dau.avg().divide(mau.avg())
+          });
+      });
+    });
     </script>
   </body>
 </html>
