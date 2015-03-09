@@ -19,14 +19,14 @@
       MP.api.ready(function() {
         // assumes you have an event called 'Game Played'
         var eventName = 'Game Played';
-        var $mau = MP.api.segment(eventName, '$browser', {
+        var $mau = MP.api.segment(eventName, 'mp_country_code', {
             from: moment().subtract(1, 'months'),
             to: moment(),
             type: 'unique',
             unit: 'month'
         });
     
-        var $dau = MP.api.segment(eventName, '$browser', {
+        var $dau = MP.api.segment(eventName, 'mp_country_code', {
             from: moment().subtract(1, 'days'),
             to: moment(),
             type: 'unique',
@@ -34,7 +34,8 @@
         });
     
         $.when($dau, $mau).done(function(dau, mau) {
-            console.log(dau.avg(), mau.avg())
+            console.log(dau.avg());
+            console.log(mau.avg());
             $('<div></div>').appendTo('body').MPChart({
                 chartType: 'map',
                 data: dau.avg().divide(mau.avg())
