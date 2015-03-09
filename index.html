@@ -32,7 +32,9 @@
             type: 'unique',
             unit: 'day'
         });
-    
+        console.log($mau);
+        console.log($dau);
+        
         $.when($dau, $mau).done(function(dau, mau) {
             $('<div></div>').appendTo('body').MPChart({
                 chartType: 'map',
