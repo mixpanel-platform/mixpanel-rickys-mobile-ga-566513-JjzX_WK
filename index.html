@@ -27,7 +27,7 @@
         });
     
         var $dau = MP.api.segment(eventName, 'mp_country_code', {
-            from: moment().subtract(1, 'days'),
+            from: moment().subtract(10, 'days'),
             to: moment(),
             type: 'unique',
             unit: 'day'
