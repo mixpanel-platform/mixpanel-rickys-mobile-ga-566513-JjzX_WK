@@ -17,6 +17,12 @@
     <div id="table"></div>
     <script>
       MP.api.ready(function() {
+        
+         var eventSelect = $('<div></div>').appendTo('body').MPEventSelect(); 
+          // Create the dropdown containing your top events
+        eventSelect.on('change', function(e, selection) {                     // Do something when an option is selected
+            alert(selection);
+        });
         // assumes you have an event called 'Game Played'
         var eventName = 'Game Played';
         var $mau = MP.api.segment(eventName, 'mp_country_code', {
